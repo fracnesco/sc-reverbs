@@ -1,0 +1,11 @@
+(
+	name: "Reverbs",
+	summary: "four reverbs - a hall, a plate, a spring and a shimmer - each a UGen and an object with presets and a window, and inserts on SuperDirtGUI's mixer",
+	version: "0.1.0",
+	author: "Francesco Corvi",
+	url: "https://github.com/fracnesco/sc-reverbs.git",
+	license: "MIT",
+	copyright: "Copyright (c) 2026 Francesco Corvi",
+	schelp: "HelpSource",
+	dependencies: ["https://github.com/fracnesco/sc-fx-kit.git"]
+)

@@ -1,0 +1,65 @@
+TITLE:: Shimmer
+summary:: a shimmer reverb: a dense tank with a pitch shift in its feedback, so the tail climbs, as a UGen and as an object, with a window
+categories:: Libraries>Reverbs
+related:: Classes/FxParamUnit, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
+
+DESCRIPTION::
+A shimmer reverb: a dense tank whose output goes round again pitch shifted, so the tail climbs. One of the four reverbs of the sc-reverbs extension, with link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::.
+
+code::
+Ndef(\pad, { Shimmer.ar(LFTri.ar([110, 165, 220]).sum * 0.1 ! 2, \shimmer) }).play;
+
+m = Shimmer(Ndef(\pad), \shimmer);
+m.gui;
+m.interval = 12; m.feedback = 0.7; m.rise = 0.3;
+m.preset = 'fifth up';
+::
+
+A dense tank, and what comes out of it goes round again shifted by interval semitones (12 an octave up, 7 a fifth, -12 down), so a chord becomes a rising, glassy cloud: Eno and Lanois's trick. feedback is how much of the shifted tail goes round, rise how long each round takes, so how fast it climbs. decay is the tank's own time to 60 dB. The shift is a granular pitch shifter; haze spreads its grains so the climb is a wash rather than a staircase, and detune puts it a few cents off so it beats.
+
+Past a feedback of about 0.9 with a long decay it keeps climbing until damp stops it: the low pass in the loop is what makes it come down, and lowCut the same for a shift downward.
+
+subsection:: The object and the UGen
+It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Shimmer.ar(in, name)::, code::Shimmer(node, name)::, code::Shimmer.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window's display is a link::Classes/ReverbView::. In SuperDirtGUI it is the insert kind code::\shimmer::.
+
+The UGen takes any number of channels: one channel is fed to both sides of the reverb and gets the middle of them back; more than two are read as the first and the last, and every channel gets a side.
+
+subsection:: Parameters
+Each is a property of the object: read it, set it. The numbers are in the order of the node's control, which is what saved node maps carry.
+
+table::
+## strong::parameter:: || strong::range:: || strong::default:: || strong::what it does::
+## code::preDelay:: || 0 .. 0.2 s || 0.01 || the gap before the tank speaks
+## code::decay:: || 0.5 .. 20 s || 4 || the tank's time to fall 60 dB, before the feedback
+## code::interval:: || -24 .. 24 st || 12 || the shift, in semitones: 12 an octave up, 7 a fifth, -12 down
+## code::detune:: || -50 .. 50 ct || 0 || a few cents off the interval, so the climb beats
+## code::feedback:: || 0 .. 1 || 0.6 || how much of the shifted tail goes round again
+## code::rise:: || 0.05 .. 1 s || 0.25 || how long each round takes: how fast it climbs
+## code::damp:: || 1000 .. 16000 Hz || 5000 || the low pass in the loop: where the climb stops
+## code::lowCut:: || 60 .. 1000 Hz || 150 || the high pass in the loop: where a fall stops
+## code::haze:: || 0 .. 1 || 0.3 || how spread the shifter's grains are: a wash rather than steps
+## code::width:: || 0 .. 2 || 1 || how far apart the two sides are: 0 is mono
+## code::mix:: || 0 .. 1 || 0.35 || how much of the effect goes out, against the dry signal
+## code::output:: || -36 .. 24 dB || 0 || the level of the whole thing, in dB
+::
+
+CLASSMETHODS::
+
+METHOD:: viewKeys
+What link::Classes/ReverbView:: draws and drags: an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+s.boot;
+Ndef(\pad, { Shimmer.ar(LFTri.ar([110, 165, 220]).sum * 0.1 ! 2, \shimmer) }).play;
+
+m = Shimmer(Ndef(\pad), \shimmer);
+m.gui;
+m.interval = 12; m.feedback = 0.7; m.rise = 0.3;
+m.preset = 'fifth up';
+m.preset = Shimmer.presetNames.choose;
+m.free; Ndef(\pad).clear;
+::

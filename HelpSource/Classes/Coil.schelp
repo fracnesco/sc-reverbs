@@ -1,0 +1,67 @@
+TITLE:: Coil
+summary:: a spring reverb: dispersive allpass chains in up to three loops, with a low pass and saturation, as a UGen and as an object, with a window
+categories:: Libraries>Reverbs
+related:: Classes/FxParamUnit, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
+
+DESCRIPTION::
+A spring reverb: chains of allpasses that disperse a click into a chirp, in up to three loops of different lengths, through a low pass and a little saturation. One of the four reverbs of the sc-reverbs extension, with link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::.
+
+code::
+Ndef(\gtr, { Coil.ar(Pluck.ar(WhiteNoise.ar(0.3), Impulse.kr(1), 0.02, 1 / 220, 1.5, 0.3) ! 2, \coil) }).play;
+
+c = Coil(Ndef(\gtr), \coil);
+c.gui;
+c.drip = 0.9; c.tension = 0.3; c.springs = \three;
+c.preset = 'surf tank';
+::
+
+A spring is dispersive: the frequencies travel along it at different speeds, so a click comes out as a chirp, and the echoes of that chirp, round and round, are the boing. Here that is a chain of twelve allpasses at one short time, in a loop as long as the spring (length), through a low pass (tone: a spring carries nothing bright), a high pass and a little saturation (drive). tension sets how short each stage is - a tight spring chirps higher and faster - and drip how strongly it disperses. springs adds a second and a third spring of other lengths, each a loop of its own, so a hit smears across them.
+
+decay is the time to 60 dB for the middle of the band; the low end, which the chain holds back longest, rings a little longer than that, as it does on a spring.
+
+subsection:: The object and the UGen
+It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Coil.ar(in, name)::, code::Coil(node, name)::, code::Coil.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window's display is a link::Classes/ReverbView::. In SuperDirtGUI it is the insert kind code::\coil::.
+
+The UGen takes any number of channels: one channel is fed to both sides of the reverb and gets the middle of them back; more than two are read as the first and the last, and every channel gets a side.
+
+subsection:: Parameters
+Each is a property of the object: read it, set it. The numbers are in the order of the node's control, which is what saved node maps carry.
+
+table::
+## strong::parameter:: || strong::range:: || strong::default:: || strong::what it does::
+## code::length:: || 0.02 .. 0.12 s || 0.045 || how long the spring is: the time round it, before the chirp
+## code::decay:: || 0.2 .. 8 s || 2 || how long the tail takes to fall 60 dB
+## code::tension:: || 0 .. 1 || 0.5 || how tight the spring is: tighter chirps higher and faster
+## code::drip:: || 0 .. 1 || 0.6 || how strongly it disperses: the drip of a click, the boing of a hit
+## code::springs:: || one two three || two || how many springs, of different lengths, in the tank
+## code::tone:: || 800 .. 8000 Hz || 3500 || the low pass in the loop: a spring carries nothing bright
+## code::lowCut:: || 40 .. 400 Hz || 120 || the high pass in the loop
+## code::drive:: || 0 .. 1 || 0.1 || saturation in the loop: the tank's rattle on a hit
+## code::width:: || 0 .. 2 || 1 || how far apart the two springs' sides are: 0 is mono
+## code::mix:: || 0 .. 1 || 0.35 || how much of the effect goes out, against the dry signal
+## code::output:: || -36 .. 24 dB || 0 || the level of the whole thing, in dB
+::
+
+CLASSMETHODS::
+
+METHOD:: stages
+How many allpasses each chain has: 12.
+
+METHOD:: viewKeys
+What link::Classes/ReverbView:: draws and drags: an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+s.boot;
+Ndef(\gtr, { Coil.ar(Pluck.ar(WhiteNoise.ar(0.3), Impulse.kr(1), 0.02, 1 / 220, 1.5, 0.3) ! 2, \coil) }).play;
+
+c = Coil(Ndef(\gtr), \coil);
+c.gui;
+c.drip = 0.9; c.tension = 0.3; c.springs = \three;
+c.preset = 'surf tank';
+c.preset = Coil.presetNames.choose;
+c.free; Ndef(\gtr).clear;
+::

@@ -1,0 +1,22 @@
+TITLE:: ReverbView
+summary:: the reverbs' display: the tail, as it will fall
+categories:: Libraries>Reverbs
+related:: Classes/Hall, Classes/Plate, Classes/Coil, Classes/Shimmer, Classes/FxParamView, Classes/FxParamPanel
+
+DESCRIPTION::
+What link::Classes/FxParamPanel:: puts at the top of the window of link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::: a gap for the pre-delay, then the tail from full to 60 dB down over the decay time, drawn brighter the less damping there is. Drag along for the decay, up and down for the damping.
+
+It draws from the object's settings, through the class's code::viewKeys:: (which parameters are the decay, the pre-delay and the damping), so one view serves all four; link::Classes/FxParamView:: has the rest.
+
+CLASSMETHODS::
+
+METHOD:: new
+ARGUMENT:: unit
+One of the four reverbs.
+ARGUMENT:: parent
+A view to go in.
+
+INSTANCEMETHODS::
+
+METHOD:: hint
+What the hint bar says over it.

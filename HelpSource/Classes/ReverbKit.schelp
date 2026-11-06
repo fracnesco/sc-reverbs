@@ -1,0 +1,68 @@
+TITLE:: ReverbKit
+summary:: the arithmetic the four reverbs share
+categories:: Libraries>Reverbs
+related:: Classes/Hall, Classes/Plate, Classes/Coil, Classes/Shimmer, Classes/FxLoop
+
+DESCRIPTION::
+Class methods used inside the reverbs' DSP: a stereo pair out of any number of channels and back, an allpass's decay time for a coefficient, the gain of one lap of a loop for a decay in seconds, and the feedback delay network link::Classes/Plate:: and link::Classes/Shimmer:: are built on. It is not an effect: SuperDirtGUI and FxChainPanel list the subclasses of link::Classes/FxParamUnit::, and this is not one.
+
+code::
+(
+{
+	var in = Impulse.ar(0) ! 2;
+	ReverbKit.fdn(in, 1, 2, 8000, 100, 0.2) * 0.5
+}.play;
+)
+::
+
+CLASSMETHODS::
+
+METHOD:: pair
+The two channels a reverb works on: the first and the last of what it was given, so a mono input goes to both.
+ARGUMENT:: sig
+An Array of channels, or one.
+
+METHOD:: spread
+The pair back onto n channels: one channel takes the middle of the two, more take the sides in turn.
+ARGUMENT:: lr
+A pair.
+ARGUMENT:: n
+How many channels.
+
+METHOD:: apTime
+AllpassC's decay time for a delay and a coefficient: the UGen takes the time of a 60 dB fall, and the coefficient raised to decay over delay is 0.001 there.
+ARGUMENT:: delay
+In seconds.
+ARGUMENT:: k
+The coefficient, 0 to 1.
+
+METHOD:: lapGain
+What one lap of a loop is scaled by, for a tail to reach 60 dB down in decay seconds.
+ARGUMENT:: lap
+The lap, in seconds.
+ARGUMENT:: decay
+The time, in seconds.
+
+METHOD:: hadamard
+The 4 x 4 Hadamard matrix applied to four signals, scaled so energy is kept.
+ARGUMENT:: r
+Four signals.
+
+METHOD:: fdn
+A feedback delay network of four lines, Hadamard mixed, inside a link::Classes/FxLoop::. Answers a pair.
+ARGUMENT:: in2
+A pair going in.
+ARGUMENT:: room
+Scales the lines: 1 is 42 to 73 ms.
+ARGUMENT:: decay
+Seconds to 60 dB.
+ARGUMENT:: damp
+The low pass in the loop, Hz.
+ARGUMENT:: lowCut
+The high pass in the loop, Hz.
+ARGUMENT:: mod
+How much the lines move, 0 to 1.
+ARGUMENT:: hold
+0 to 1: at 1 the lines go round at unity with the filters out, and nothing more comes in.
+ARGUMENT:: maxRoom
+The largest room the loop is sized for.

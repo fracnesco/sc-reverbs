@@ -1,0 +1,64 @@
+TITLE:: Plate
+summary:: a plate reverb: a feedback delay network, dense at once, bright, with a hold, as a UGen and as an object, with a window
+categories:: Libraries>Reverbs
+related:: Classes/FxParamUnit, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
+
+DESCRIPTION::
+A plate: a feedback delay network of four short lines, dense from the first moment, bright, with a hold that freezes what is in it. One of the four reverbs of the sc-reverbs extension, with link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::.
+
+code::
+Ndef(\keys, { Plate.ar(Blip.ar([220, 221], 8) * Decay2.kr(Impulse.kr(0.5), 0.01, 0.2) * 0.3, \plate) }).play;
+
+p = Plate(Ndef(\keys), \plate);
+p.gui;
+p.decay = 3; p.damp = 12000;
+p.hold = true;                       // and later false
+::
+
+A feedback delay network of four lines of 42 to 73 ms (scaled by room), Hadamard mixed, so the echoes are dense from the first moment, as on a steel plate; two allpasses a side smear the input on its way in (diffusion). decay is the time to 60 dB; damp and lowCut are the filters in the loop; mod moves the lines a little, which takes the metal out of a long tail.
+
+hold freezes what is in it: the lines go round at unity, the filters step aside and nothing more comes in. A held plate never goes quiet, so in a SuperDirt insert an orbit with hold on does not sleep.
+
+subsection:: The object and the UGen
+It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Plate.ar(in, name)::, code::Plate(node, name)::, code::Plate.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window's display is a link::Classes/ReverbView::. In SuperDirtGUI it is the insert kind code::\plate::.
+
+The UGen takes any number of channels: one channel is fed to both sides of the reverb and gets the middle of them back; more than two are read as the first and the last, and every channel gets a side.
+
+subsection:: Parameters
+Each is a property of the object: read it, set it. The numbers are in the order of the node's control, which is what saved node maps carry.
+
+table::
+## strong::parameter:: || strong::range:: || strong::default:: || strong::what it does::
+## code::preDelay:: || 0 .. 0.1 s || 0.005 || the gap before the plate speaks
+## code::room:: || 0.5 .. 2 || 1 || how big the plate is: the lines, scaled
+## code::decay:: || 0.3 .. 30 s || 1.8 || how long the tail takes to fall 60 dB
+## code::diffusion:: || 0 .. 1 || 0.6 || how smeared the input is on its way in
+## code::hold:: || on / off || false || freeze what is in the plate: it rings on at unity, nothing more goes in
+## code::damp:: || 1000 .. 20000 Hz || 9000 || the low pass in the loop: the high end dies first
+## code::lowCut:: || 20 .. 500 Hz || 100 || the high pass in the loop
+## code::mod:: || 0 .. 1 || 0.2 || how much the lines move: takes the metal out of a long tail
+## code::width:: || 0 .. 2 || 1 || how far apart the two sides are: 0 is mono
+## code::mix:: || 0 .. 1 || 0.3 || how much of the effect goes out, against the dry signal
+## code::output:: || -36 .. 24 dB || 0 || the level of the whole thing, in dB
+::
+
+CLASSMETHODS::
+
+METHOD:: viewKeys
+What link::Classes/ReverbView:: draws and drags: an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+s.boot;
+Ndef(\keys, { Plate.ar(Blip.ar([220, 221], 8) * Decay2.kr(Impulse.kr(0.5), 0.01, 0.2) * 0.3, \plate) }).play;
+
+p = Plate(Ndef(\keys), \plate);
+p.gui;
+p.decay = 3; p.damp = 12000;
+p.hold = true;                       // and later false
+p.preset = Plate.presetNames.choose;
+p.free; Ndef(\keys).clear;
+::
