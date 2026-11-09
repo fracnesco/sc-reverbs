@@ -1,7 +1,7 @@
 TITLE:: Coil
 summary:: a spring reverb: dispersive allpass chains in up to three loops, with a low pass and saturation, as a UGen and as an object, with a window
 categories:: Libraries>Reverbs
-related:: Classes/FxParamUnit, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
+related:: Classes/FxParamUnit, Classes/CoilView, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
 
 DESCRIPTION::
 A spring reverb: chains of allpasses that disperse a click into a chirp, in up to three loops of different lengths, through a low pass and a little saturation. One of the four reverbs of the sc-reverbs extension, with link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::.
@@ -20,7 +20,7 @@ A spring is dispersive: the frequencies travel along it at different speeds, so 
 decay is the time to 60 dB for the middle of the band; the low end, which the chain holds back longest, rings a little longer than that, as it does on a spring.
 
 subsection:: The object and the UGen
-It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Coil.ar(in, name)::, code::Coil(node, name)::, code::Coil.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window's display is a link::Classes/ReverbView::. In SuperDirtGUI it is the insert kind code::\coil::.
+It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Coil.ar(in, name)::, code::Coil(node, name)::, code::Coil.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window (link::Classes/FxDeviceGUI::) shares a frame with the other reverbs and draws its own space in its own colour: the display is a link::Classes/CoilView:: (a lane of chirps per spring; the gestures are in link::Classes/ReverbView::). In SuperDirtGUI it is the insert kind code::\coil::.
 
 The UGen takes any number of channels: one channel is fed to both sides of the reverb and gets the middle of them back; more than two are read as the first and the last, and every channel gets a side.
 
@@ -29,12 +29,12 @@ Each is a property of the object: read it, set it. The numbers are in the order 
 
 table::
 ## strong::parameter:: || strong::range:: || strong::default:: || strong::what it does::
-## code::length:: || 0.02 .. 0.12 s || 0.045 || how long the spring is: the time round it, before the chirp
-## code::decay:: || 0.2 .. 8 s || 2 || how long the tail takes to fall 60 dB
+## code::length:: || 0.02 .. 0.12 s || 0.045 || how long the spring is: the time round it, before the chirp comes back - or drag the first round trip
+## code::decay:: || 0.2 .. 8 s || 2 || how long the tail takes to fall 60 dB - or drag where the springs end
 ## code::tension:: || 0 .. 1 || 0.5 || how tight the spring is: tighter chirps higher and faster
 ## code::drip:: || 0 .. 1 || 0.6 || how strongly it disperses: the drip of a click, the boing of a hit
 ## code::springs:: || one two three || two || how many springs, of different lengths, in the tank
-## code::tone:: || 800 .. 8000 Hz || 3500 || the low pass in the loop: a spring carries nothing bright
+## code::tone:: || 800 .. 8000 Hz || 3500 || the low pass in the loop: a spring carries nothing bright - or drag the ceiling
 ## code::lowCut:: || 40 .. 400 Hz || 120 || the high pass in the loop
 ## code::drive:: || 0 .. 1 || 0.1 || saturation in the loop: the tank's rattle on a hit
 ## code::width:: || 0 .. 2 || 1 || how far apart the two springs' sides are: 0 is mono
@@ -48,7 +48,7 @@ METHOD:: stages
 How many allpasses each chain has: 12.
 
 METHOD:: viewKeys
-What link::Classes/ReverbView:: draws and drags: an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
+What the plain link::Classes/ReverbView:: draws and drags (the face uses it for its readout): an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
 
 INSTANCEMETHODS::
 

@@ -1,7 +1,7 @@
 TITLE:: Hall
 summary:: a concert hall reverb: a modulated Dattorro tank with early reflections and a pre-delay, as a UGen and as an object, with a window
 categories:: Libraries>Reverbs
-related:: Classes/FxParamUnit, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
+related:: Classes/FxParamUnit, Classes/HallView, Classes/ReverbView, Classes/ReverbKit, Classes/FxUnit, Classes/FxChain
 
 DESCRIPTION::
 A concert hall: the input diffused into a modulated Dattorro tank, with early reflections and a pre-delay; slow to build, long, moving. One of the four reverbs of the sc-reverbs extension, with link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::.
@@ -20,7 +20,7 @@ The input goes through a pre-delay, then four allpasses that smear it, into a ta
 The tank's first output arrives about 170 ms after the input at a room of 1, so with early at 0 a short sound has a gap before its tail; the reflections fill it.
 
 subsection:: The object and the UGen
-It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Hall.ar(in, name)::, code::Hall(node, name)::, code::Hall.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window's display is a link::Classes/ReverbView::. In SuperDirtGUI it is the insert kind code::\hall::.
+It is an link::Classes/FxParamUnit::, so everything that class documents works here: code::Hall.ar(in, name)::, code::Hall(node, name)::, code::Hall.onBus(bus, numChannels)::, presets, the clipboard, code::gui::. Its window (link::Classes/FxDeviceGUI::) shares a frame with the other reverbs and draws its own space in its own colour: the display is a link::Classes/HallView:: (the onset beside the tail; the gestures are in link::Classes/ReverbView::). In SuperDirtGUI it is the insert kind code::\hall::.
 
 The UGen takes any number of channels: one channel is fed to both sides of the reverb and gets the middle of them back; more than two are read as the first and the last, and every channel gets a side.
 
@@ -29,11 +29,11 @@ Each is a property of the object: read it, set it. The numbers are in the order 
 
 table::
 ## strong::parameter:: || strong::range:: || strong::default:: || strong::what it does::
-## code::preDelay:: || 0 .. 0.25 s || 0.02 || the gap before the reverb starts
-## code::room:: || 0.3 .. 3 || 1 || how big the hall is: the tank's delays, scaled
-## code::decay:: || 0.2 .. 60 s || 2.5 || how long the tail takes to fall 60 dB
+## code::preDelay:: || 0 .. 0.25 s || 0.02 || the gap before the reverb starts - or drag its edge in the display
+## code::room:: || 0.3 .. 3 x || 1 || how big the hall is: the tank's delays, scaled - a bigger one swells later
+## code::decay:: || 0.2 .. 60 s || 2.5 || how long the tail takes to fall 60 dB - or drag the tail's end
 ## code::diffusion:: || 0 .. 1 || 0.7 || how smeared the input is on its way in: low is echoey, high is smooth
-## code::early:: || 0 .. 1 || 0.4 || how much of the first reflections, before the tail
+## code::early:: || 0 .. 1 || 0.4 || how loud the first reflections are, off the walls, before the tail
 ## code::damp:: || 500 .. 20000 Hz || 6000 || the low pass in the loop: the high end dies first
 ## code::lowCut:: || 20 .. 1000 Hz || 60 || the high pass in the loop: keeps the bottom from piling up
 ## code::modDepth:: || 0 .. 1 || 0.3 || how much the tank's allpasses move: thickens the tail, chorus at the top
@@ -46,7 +46,7 @@ table::
 CLASSMETHODS::
 
 METHOD:: viewKeys
-What link::Classes/ReverbView:: draws and drags: an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
+What the plain link::Classes/ReverbView:: draws and drags (the face uses it for its readout): an Event naming the parameters that are the decay, the pre-delay (nil when there is none) and the damping, with the damping's range.
 
 INSTANCEMETHODS::
 

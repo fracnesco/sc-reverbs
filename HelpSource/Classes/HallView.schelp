@@ -1,0 +1,41 @@
+TITLE:: HallView
+summary:: the hall's display: the onset beside the long fall
+categories:: Libraries>Reverbs
+related:: Classes/Hall, Classes/ReverbView, Classes/PlateView, Classes/CoilView, Classes/ShimmerView
+
+DESCRIPTION::
+The display of link::Classes/Hall::'s window. A hall is a space you hear build, so it gets two panes. On the left, the first half second or more (it follows the size): the hit, the gap of the pre-delay, the early reflections off the walls as bars (taller with code::early::), then the tank swelling up to its crest. On the right, the whole tail: the swell, the fall to 60 dB down over the decay, wavering with the modulation, and a second line for the highs (5 kHz), which the damping takes first.
+
+The swell is the hall's own: its first sound arrives 0.12 x the size after the pre-delay, its crest 0.235 x the size, measured on an impulse. The rest of the drawing is worked out from the settings.
+
+table::
+## the gap's edge || drag along: the pre-delay
+## the crest || drag along: the size (the swell follows)
+## the tallest reflection || drag up and down: early
+## the tail's end || drag along: the decay
+## the 5k line || drag up and down: the damping
+## anywhere else || in the onset, along the size and up and down early; in the tail, along the decay and up and down the damping
+## the wheel || the size
+::
+
+Double click a handle for its defaults. link::Classes/ReverbView:: has the rest.
+
+CLASSMETHODS::
+
+METHOD:: firstSound
+When the tank's first sound arrives after the pre-delay, in seconds.
+ARGUMENT:: room
+The size.
+
+METHOD:: crest
+When the swell is at its loudest, after the pre-delay, in seconds.
+ARGUMENT:: room
+The size.
+
+EXAMPLES::
+
+code::
+h = Hall.new;
+h.gui;
+h.preset = \cathedral;	// a later, longer swell, a darker tail
+::

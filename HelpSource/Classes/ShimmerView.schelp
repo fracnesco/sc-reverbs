@@ -1,0 +1,36 @@
+TITLE:: ShimmerView
+summary:: the shimmer's display: the steps it climbs
+categories:: Libraries>Reverbs
+related:: Classes/Shimmer, Classes/ReverbView, Classes/HallView, Classes/PlateView, Classes/CoilView
+
+DESCRIPTION::
+The display of link::Classes/Shimmer::'s window. What a shimmer does is change pitch, so it is drawn as pitch against time, in semitones from the input: the input at 0, then a step up (or down) by the interval every round, a round being the rise plus the tank's own time. Each step is fainter by the feedback, by the tank's decay over a round, and by what the damping takes from a higher pitch; it fades out along its line. The hatched ceiling is the damping and the hatched floor the low cut: they are what stop a climb or a fall. When a round loses less than 3 dB (feedback high, decay long against the rise), the readout says it climbs until the damping stops it. A strip underneath has the level the model expects, with the output drawn over it.
+
+table::
+## the first step || drag along: the rise; up and down: the interval
+## the ceiling || drag up and down: the damping
+## the floor || drag up and down: the low cut
+## the end of the input's line || drag along: the decay
+## anywhere else || along the decay, up and down the interval
+## the wheel || the feedback
+::
+
+With no feedback there is no climb: only the input's line is left, and the pitch, detune, rise and haze knobs dim. Double click a handle for its defaults. link::Classes/ReverbView:: has the rest.
+
+CLASSMETHODS::
+
+METHOD:: intervalText
+An interval in words, as the readout says it.
+ARGUMENT:: st
+Semitones.
+code::
+ShimmerView.intervalText(7);
+::
+
+EXAMPLES::
+
+code::
+s = Shimmer.new;
+s.gui;
+s.feedback = 0.95; s.decay = 14;	// runs away until the damping stops it
+::

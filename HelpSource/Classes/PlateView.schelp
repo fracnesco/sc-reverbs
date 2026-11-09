@@ -1,0 +1,35 @@
+TITLE:: PlateView
+summary:: the plate's display: a dense sheet, held flat by hold
+categories:: Libraries>Reverbs
+related:: Classes/Plate, Classes/ReverbView, Classes/HallView, Classes/CoilView, Classes/ShimmerView
+
+DESCRIPTION::
+The display of link::Classes/Plate::'s window. A plate has no build: it is dense from its first echo, 42 ms x the size after the pre-delay, so it is drawn as a sheet of fine lines at full level from there, falling to 60 dB down over the decay, with the highs (5 kHz) falling sooner, and the lows (100 Hz, dashed) when the low cut shortens them.
+
+With code::hold:: on, the sheet runs flat to the right edge, the input is drawn closed, the readout says held, and only the pre-delay's handle is left: the decay and the damping wait until hold lets go.
+
+table::
+## the gap's edge || drag along: the pre-delay
+## the tail's end || drag along: the decay
+## the 5k line || drag up and down: the damping
+## anywhere else || along the decay, up and down the damping
+## the wheel || the size
+::
+
+Double click a handle for its defaults. link::Classes/ReverbView:: has the rest.
+
+CLASSMETHODS::
+
+METHOD:: firstLine
+When the plate's first echo arrives after the pre-delay, in seconds.
+ARGUMENT:: room
+The size.
+
+EXAMPLES::
+
+code::
+p = Plate.new;
+p.gui;
+p.hold = true;	// flat, and the decay and damping knobs dim
+p.hold = false;
+::

@@ -1,22 +1,78 @@
 TITLE:: ReverbView
-summary:: the reverbs' display: the tail, as it will fall
+summary:: the reverbs' display: the frame each one draws its own space in
 categories:: Libraries>Reverbs
-related:: Classes/Hall, Classes/Plate, Classes/Coil, Classes/Shimmer, Classes/FxParamView, Classes/FxParamPanel
+related:: Classes/HallView, Classes/PlateView, Classes/CoilView, Classes/ShimmerView, Classes/FxParamView, Classes/FxDevicePanel
 
 DESCRIPTION::
-What link::Classes/FxParamPanel:: puts at the top of the window of link::Classes/Hall::, link::Classes/Plate::, link::Classes/Coil:: and link::Classes/Shimmer::: a gap for the pre-delay, then the tail from full to 60 dB down over the decay time, drawn brighter the less damping there is. Drag along for the decay, up and down for the damping.
+What link::Classes/FxDevicePanel:: puts at the top of the window of a reverb. Time runs along, a strip at the top reads out the settings, and each reverb draws its own kind of space on it, worked out from its settings (not measured):
 
-It draws from the object's settings, through the class's code::viewKeys:: (which parameters are the decay, the pre-delay and the damping), so one view serves all four; link::Classes/FxParamView:: has the rest.
+table::
+## link::Classes/HallView:: || the onset - the gap, the walls, the slow swell - beside the long fall
+## link::Classes/PlateView:: || a sheet, dense from the first moment, held flat by hold
+## link::Classes/CoilView:: || a lane per spring, each round trip a chirp, smearing as it goes
+## link::Classes/ShimmerView:: || pitch against time: each round an interval higher, fading
+::
+
+Behind the drawing, in signal blue, is the output itself: after each hit (the input jumping 9 dB over where it was) the out meter's readings are drawn from the moment of the hit, so a sound rings out along the slope the settings say. It needs the meter replies a window turns on; with no hit it starts again whenever the sweep runs off the display.
+
+This class alone draws a plain tail (a gap for the pre-delay, the fall to 60 dB down, the highs at 5 kHz falling sooner) for any link::Classes/FxParamUnit:: that names its decay, pre-delay and damping in code::*viewKeys::.
+
+subsection:: Mouse
+
+table::
+## drag a handle || what the hint bar says it moves; shift: a tenth as fast
+## drag anywhere else || along: the decay; up and down: the damping (each face may say otherwise)
+## double click || a handle's parameters back to their defaults (anywhere else: what a drag there moves)
+## the wheel || the face's second hero: the size, the drip, the feedback
+::
+
+Hover over a handle and it grows, and the hint bar names it.
+
+subsection:: Writing a face
+A subclass writes code::prCompute:: (an Event of what it draws, worked out again only when a setting or the size changes, its code::\handles:: among it: Events with code::at::, a Point, code::x:: and/or code::y::, the parameters a drag along and up moves, and a code::hint::), code::prDrawFace:: and code::caption::; code::prFreeKeys::, code::prWheelKey:: and code::prFreeHint:: say what the rest of the display does.
 
 CLASSMETHODS::
 
 METHOD:: new
 ARGUMENT:: unit
-One of the four reverbs.
+One of the reverbs.
 ARGUMENT:: parent
 A view to go in.
 
 INSTANCEMETHODS::
 
 METHOD:: hint
-What the hint bar says over it.
+What the hint bar says with the pointer at x, y: the handle under it, or what dragging there does.
+ARGUMENT:: x
+In the view's coordinates.
+ARGUMENT:: y
+In the view's coordinates.
+
+METHOD:: caption
+The readout along the top.
+
+METHOD:: captionRight
+What the readout says at its right, in the reverb's colour, or nil (a held plate, a runaway shimmer).
+
+METHOD:: levelsArrived
+Called by the panel on every meter reply: adds the out level to the sweep, or starts a new one on a hit.
+
+METHOD:: sweep
+The readings drawn now, as code::[seconds since the hit, dB]:: pairs.
+
+METHOD:: sweepTop
+The loudest of them, in dB.
+
+METHOD:: sweepHit
+Whether a hit started the sweep (false when it started because the last one ran off the display).
+
+METHOD:: model
+What the face drew last: the Event code::prCompute:: answered.
+
+EXAMPLES::
+
+code::
+h = Hall.new;
+h.gui;
+h.decay = 6;	// the tail's end moves out
+::

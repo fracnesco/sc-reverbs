@@ -1,0 +1,43 @@
+TITLE:: CoilView
+summary:: the spring's display: a lane of chirps per spring
+categories:: Libraries>Reverbs
+related:: Classes/Coil, Classes/ReverbView, Classes/HallView, Classes/PlateView, Classes/ShimmerView
+
+DESCRIPTION::
+The display of link::Classes/Coil::'s window. A spring is heard as a chirp coming round again and again, so each spring gets a lane, frequency up (100 Hz to 8 kHz) and time along, and every round trip is drawn as a chirp: the lows first, the highs closing up after them. The chirps come round every round trip (the length times the spring's ratio, plus the chain), spread more with each lap (the drip), steepen with the tension, and fade to 60 dB down at the decay. The ceiling is the tone, the floor the low cut, and both close in lap by lap, as the loop's filters take more each time. A strip underneath has the fall in dB and the highs (5 kHz).
+
+table::
+## the first round trip || drag along: the length
+## the ceiling || drag up and down: the tone
+## the end || drag along: the decay
+## anywhere else || along the decay, up and down the tone
+## the wheel || the drip
+::
+
+Double click a handle for its defaults. link::Classes/ReverbView:: has the rest.
+
+CLASSMETHODS::
+
+METHOD:: lap
+The time round one spring, in seconds.
+ARGUMENT:: length
+The length.
+ARGUMENT:: ratio
+The spring's ratio: 1, 1.37 or 1.81.
+ARGUMENT:: tension
+The tension.
+
+METHOD:: spread
+How far one round's chirp spreads, lows to highs, in seconds.
+ARGUMENT:: tension
+The tension.
+ARGUMENT:: drip
+The drip.
+
+EXAMPLES::
+
+code::
+c = Coil.new;
+c.gui;
+c.springs = \three; c.drip = 0.9;	// three lanes, wider chirps
+::

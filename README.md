@@ -65,22 +65,22 @@ Built in presets: default, small hall, concert hall, cathedral, dark hall, brigh
 
 | parameter | section | range | default | what it does |
 |---|---|---|---|---|
-| `preDelay` | space | 0 .. 0.25 s | 0.02 | the gap before the reverb starts |
-| `room` | space | 0.3 .. 3 | 1 | how big the hall is: the tank's delays, scaled |
-| `decay` | space | 0.2 .. 60 s | 2.5 | how long the tail takes to fall 60 dB |
-| `diffusion` | space | 0 .. 1 | 0.7 | how smeared the input is on its way in: low is echoey, high is smooth |
-| `early` | space | 0 .. 1 | 0.4 | how much of the first reflections, before the tail |
+| `preDelay` | onset | 0 .. 0.25 s | 0.02 | the gap before the reverb starts - or drag its edge in the display |
+| `room` | space | 0.3 .. 3 x | 1 | how big the hall is: the tank's delays, scaled - a bigger one swells later |
+| `decay` | space | 0.2 .. 60 s | 2.5 | how long the tail takes to fall 60 dB - or drag the tail's end |
+| `diffusion` | onset | 0 .. 1 | 0.7 | how smeared the input is on its way in: low is echoey, high is smooth |
+| `early` | onset | 0 .. 1 | 0.4 | how loud the first reflections are, off the walls, before the tail |
 | `damp` | tone | 500 .. 20000 Hz | 6000 | the low pass in the loop: the high end dies first |
 | `lowCut` | tone | 20 .. 1000 Hz | 60 | the high pass in the loop: keeps the bottom from piling up |
 | `modDepth` | tone | 0 .. 1 | 0.3 | how much the tank's allpasses move: thickens the tail, chorus at the top |
 | `modRate` | tone | 0.1 .. 3 Hz | 0.7 | how fast they move |
-| `width` | tone | 0 .. 2 | 1 | how far apart the two sides are: 0 is mono |
-| `mix` | tone | 0 .. 1 | 0.3 | how much of the effect goes out, against the dry signal |
-| `output` | tone | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
+| `width` | output | 0 .. 2 | 1 | how far apart the two sides are: 0 is mono |
+| `mix` | output | 0 .. 1 | 0.3 | how much of the effect goes out, against the dry signal |
+| `output` | output | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
 
 ## Plate
 
-A feedback delay network of four lines of 42 to 73 ms (scaled by `room`), Hadamard mixed, so the echoes are dense from the first moment, as on a steel plate; two allpasses a side smear the input on its way in (`diffusion`). `decay` is the time to 60 dB; `damp` and `lowCut` are the filters in the loop; `mod` moves the lines a little, which takes the metal out of a long tail.
+A feedback delay network of four lines of 42 to 73 ms (scaled by `room`), Hadamard mixed, so the echoes are dense from the first moment, as on a steel plate; two allpasses a side smear the input on its way in (`diffusion`). `decay` is the time to 60 dB; `damp` and `lowCut` are the filters in the loop; `modDepth` moves the lines a little, which takes the metal out of a long tail.
 
 `hold` freezes what is in it: the lines go round at unity, the filters step aside and nothing more comes in. A held plate never goes quiet, so in a SuperDirt insert an orbit with `hold` on does not sleep.
 
@@ -88,17 +88,17 @@ Built in presets: default, vocal plate, snare plate, bright plate, dark plate, s
 
 | parameter | section | range | default | what it does |
 |---|---|---|---|---|
-| `preDelay` | plate | 0 .. 0.1 s | 0.005 | the gap before the plate speaks |
-| `room` | plate | 0.5 .. 2 | 1 | how big the plate is: the lines, scaled |
-| `decay` | plate | 0.3 .. 30 s | 1.8 | how long the tail takes to fall 60 dB |
-| `diffusion` | plate | 0 .. 1 | 0.6 | how smeared the input is on its way in |
-| `hold` | plate | on / off | false | freeze what is in the plate: it rings on at unity, nothing more goes in |
-| `damp` | tone | 1000 .. 20000 Hz | 9000 | the low pass in the loop: the high end dies first |
+| `preDelay` | input | 0 .. 0.1 s | 0.005 | the gap before the plate speaks - or drag its edge in the display |
+| `room` | plate | 0.5 .. 2 x | 1 | how big the plate is: the lines, scaled |
+| `decay` | plate | 0.3 .. 30 s | 1.8 | how long the tail takes to fall 60 dB - or drag the tail's end |
+| `diffusion` | input | 0 .. 1 | 0.6 | how smeared the input is on its way in |
+| `hold` | plate | on off | false | freeze what is in the plate: it rings on at unity, nothing more goes in - click to hold, press and keep pressing to hold only while you do |
+| `damp` | tone | 1000 .. 20000 Hz | 9000 | the low pass in the loop: the high end dies first - or drag the 5k line |
 | `lowCut` | tone | 20 .. 500 Hz | 100 | the high pass in the loop |
-| `mod` | tone | 0 .. 1 | 0.2 | how much the lines move: takes the metal out of a long tail |
-| `width` | tone | 0 .. 2 | 1 | how far apart the two sides are: 0 is mono |
-| `mix` | tone | 0 .. 1 | 0.3 | how much of the effect goes out, against the dry signal |
-| `output` | tone | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
+| `modDepth` | tone | 0 .. 1 | 0.2 | how much the lines move: takes the metal out of a long tail |
+| `width` | output | 0 .. 2 | 1 | how far apart the two sides are: 0 is mono |
+| `mix` | output | 0 .. 1 | 0.3 | how much of the effect goes out, against the dry signal |
+| `output` | output | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
 
 ## Coil
 
@@ -110,17 +110,17 @@ Built in presets: default, surf tank, guitar amp, short spring, long spring, dub
 
 | parameter | section | range | default | what it does |
 |---|---|---|---|---|
-| `length` | spring | 0.02 .. 0.12 s | 0.045 | how long the spring is: the time round it, before the chirp |
-| `decay` | spring | 0.2 .. 8 s | 2 | how long the tail takes to fall 60 dB |
+| `length` | spring | 0.02 .. 0.12 s | 0.045 | how long the spring is: the time round it, before the chirp comes back - or drag the first round trip |
+| `decay` | spring | 0.2 .. 8 s | 2 | how long the tail takes to fall 60 dB - or drag where the springs end |
 | `tension` | spring | 0 .. 1 | 0.5 | how tight the spring is: tighter chirps higher and faster |
 | `drip` | spring | 0 .. 1 | 0.6 | how strongly it disperses: the drip of a click, the boing of a hit |
-| `springs` | spring | one two three | two | how many springs, of different lengths, in the tank |
-| `tone` | tone | 800 .. 8000 Hz | 3500 | the low pass in the loop: a spring carries nothing bright |
+| `springs` | tank | one two three | two | how many springs, of different lengths, in the tank |
+| `tone` | tone | 800 .. 8000 Hz | 3500 | the low pass in the loop: a spring carries nothing bright - or drag the ceiling |
 | `lowCut` | tone | 40 .. 400 Hz | 120 | the high pass in the loop |
-| `drive` | tone | 0 .. 1 | 0.1 | saturation in the loop: the tank's rattle on a hit |
-| `width` | tone | 0 .. 2 | 1 | how far apart the two springs' sides are: 0 is mono |
-| `mix` | tone | 0 .. 1 | 0.35 | how much of the effect goes out, against the dry signal |
-| `output` | tone | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
+| `drive` | tank | 0 .. 1 | 0.1 | saturation in the loop: the tank's rattle on a hit |
+| `width` | output | 0 .. 2 | 1 | how far apart the two springs' sides are: 0 is mono |
+| `mix` | output | 0 .. 1 | 0.35 | how much of the effect goes out, against the dry signal |
+| `output` | output | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
 
 ## Shimmer
 
@@ -132,22 +132,33 @@ Built in presets: default, octave up, fifth up, octave down, two octaves, slow c
 
 | parameter | section | range | default | what it does |
 |---|---|---|---|---|
-| `preDelay` | shimmer | 0 .. 0.2 s | 0.01 | the gap before the tank speaks |
-| `decay` | shimmer | 0.5 .. 20 s | 4 | the tank's time to fall 60 dB, before the feedback |
-| `interval` | shimmer | -24 .. 24 st | 12 | the shift, in semitones: 12 an octave up, 7 a fifth, -12 down |
-| `detune` | shimmer | -50 .. 50 ct | 0 | a few cents off the interval, so the climb beats |
-| `feedback` | shimmer | 0 .. 1 | 0.6 | how much of the shifted tail goes round again |
-| `rise` | shimmer | 0.05 .. 1 s | 0.25 | how long each round takes: how fast it climbs |
-| `damp` | tone | 1000 .. 16000 Hz | 5000 | the low pass in the loop: where the climb stops |
-| `lowCut` | tone | 60 .. 1000 Hz | 150 | the high pass in the loop: where a fall stops |
+| `preDelay` | tank | 0 .. 0.2 s | 0.01 | the gap before the tank speaks |
+| `decay` | tank | 0.5 .. 20 s | 4 | the tank's time to fall 60 dB, before the feedback - or drag the tank's end |
+| `interval` | climb | -24 .. 24 st | 12 | the shift, in semitones: 12 an octave up, 7 a fifth, -12 down - or drag the first step up and down |
+| `detune` | climb | -50 .. 50 ct | 0 | a few cents off the interval, so the climb beats |
+| `feedback` | climb | 0 .. 1 | 0.6 | how much of the shifted tail goes round again - or the wheel on the display |
+| `rise` | climb | 0.05 .. 1 s | 0.25 | how long each round takes: how fast it climbs - or drag the first step along |
+| `damp` | tone | 1000 .. 16000 Hz | 5000 | the low pass in the loop: where the climb stops - or drag the ceiling |
+| `lowCut` | tone | 60 .. 1000 Hz | 150 | the high pass in the loop: where a fall stops - or drag the floor |
 | `haze` | tone | 0 .. 1 | 0.3 | how spread the shifter's grains are: a wash rather than steps |
-| `width` | tone | 0 .. 2 | 1 | how far apart the two sides are: 0 is mono |
-| `mix` | tone | 0 .. 1 | 0.35 | how much of the effect goes out, against the dry signal |
-| `output` | tone | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
+| `width` | output | 0 .. 2 | 1 | how far apart the two sides are: 0 is mono |
+| `mix` | output | 0 .. 1 | 0.35 | how much of the effect goes out, against the dry signal |
+| `output` | output | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
 
 ## The window
 
-`h.gui` opens the top row (on, presets, save, copy, paste), the display, and a row of knobs per section. Hover over anything and the bar at the bottom says what it does. The display is the tail as it will fall: a gap for the pre-delay, the slope to 60 dB down over the decay, brighter the less damping there is. In the display, drag along for the decay and up and down for the damping.
+`h.gui` opens the window: the top row (on, presets, save, copy, paste), the display with the in and out meters at its right, the cards of knobs under it, and the output card (width, mix, output) at the right. Hover over anything and the bar at the bottom says what it does. `h.panel(parent)` puts the same thing in a view of yours.
+
+The four share a frame and draw their own kind of space in it, each in its own colour:
+
+- **Hall** shows the onset and the tail side by side. On the left the first half second: the gap of the pre-delay, the early reflections off the walls, then the tank swelling up slowly; on the right the whole fall to 60 dB down, wavering with the modulation, and a second, steeper line for the highs (5 kHz), which the damping takes first. Drag the gap's edge for the pre-delay, the top of the swell along for the size, the tallest reflection up and down for `early`, the tail's end for the decay, the 5k line for the damping.
+- **Plate** is a sheet: dense lines from the first moment, no build, falling to 60 dB down. `hold` is the big pad in the plate card: a click holds, a click lets go, and held down longer than a moment it only holds while you press. Held, the sheet goes flat to the right edge and the knobs that no longer do anything dim.
+- **Coil** has a lane per spring, frequency up and time along: each round trip comes back as a chirp, lows first and the highs closing up, smearing more with every lap. The drip spreads the chirps, the tension steepens them, the ceiling is the tone. A strip underneath has the fall in dB. Drag the first round trip along for the length, the ceiling for the tone, the end for the decay; the wheel is the drip.
+- **Shimmer** draws pitch against time: the input at 0 semitones, then a step up by the interval every round, each fainter by the feedback, until the damping (the hatched ceiling) or the low cut (the floor) stops it. When it would keep climbing, the readout says so. Drag the first step up and down for the interval and along for the rise; the pitch knob's right click has the usual intervals by name.
+
+Behind the drawing, in signal blue, is what actually came out: after each hit (the input jumping up) the out meter's readings are drawn from that moment, so you see the sound ring out along the slope the settings promise.
+
+In every display: drag a handle for what the bar says it moves (shift for fine); drag anywhere else along for the decay and up and down for what darkens it (the damping; the tone on the spring, the interval on the shimmer; in the hall's onset, the size and the reflections); double click a handle to put its parameters back to their defaults; and the wheel moves the reverb's second hero (the size, the drip, the feedback).
 
 ## Presets
 
@@ -170,7 +181,11 @@ In a SuperDirt insert, an orbit sleeps when its effects fall silent; a reverb ke
 | [classes/Coil.sc](classes/Coil.sc) | the spring: parameters, presets, the chains and their loops |
 | [classes/Shimmer.sc](classes/Shimmer.sc) | the shimmer: parameters, presets, the shifted feedback round the network |
 | [classes/ReverbKit.sc](classes/ReverbKit.sc) | what they share: the stereo pair, allpass and loop gain arithmetic, the feedback delay network |
-| [classes/ReverbView.sc](classes/ReverbView.sc) | the window's display, the same for all four |
+| [classes/ReverbView.sc](classes/ReverbView.sc) | the frame of the display the four share: time along, the axes, the handles and their drags, the output drawn after each hit |
+| [classes/HallView.sc](classes/HallView.sc) | the hall's display: the onset and the tail |
+| [classes/PlateView.sc](classes/PlateView.sc) | the plate's display: the sheet, and hold |
+| [classes/CoilView.sc](classes/CoilView.sc) | the spring's display: a lane of chirps per spring |
+| [classes/ShimmerView.sc](classes/ShimmerView.sc) | the shimmer's display: the steps it climbs |
 | [HelpSource/Classes/](HelpSource/Classes/) | a help file per class |
 | [examples/reverbs-demo.scd](examples/reverbs-demo.scd) | a walkthrough, one block at a time |
 | [install.scd](install.scd) | the symlink, a check, an uninstall |

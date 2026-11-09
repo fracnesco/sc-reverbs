@@ -43,6 +43,34 @@ The lap, in seconds.
 ARGUMENT:: decay
 The time, in seconds.
 
+METHOD:: filterLoss
+How many dB one pass through a loop's damping and low cut takes off one frequency, taking each as a fourth order slope. What the displays draw with; a model, not a measurement.
+ARGUMENT:: freq
+The frequency, Hz.
+ARGUMENT:: damp
+The low pass, Hz.
+ARGUMENT:: lowCut
+The high pass, Hz.
+code::
+ReverbKit.filterLoss(5000, 6000, 60);	// the hall's default at 5 kHz: about 1.7 dB a lap
+::
+
+METHOD:: rtAt
+How long one frequency takes to fall 60 dB in a loop of lap seconds tuned to decay, with link::#*filterLoss:: once a lap: the displays' line for the highs (5 kHz).
+ARGUMENT:: freq
+The frequency, Hz.
+ARGUMENT:: decay
+What the loop is tuned to, seconds to 60 dB.
+ARGUMENT:: lap
+The lap, in seconds.
+ARGUMENT:: damp
+The low pass, Hz.
+ARGUMENT:: lowCut
+The high pass, Hz.
+code::
+ReverbKit.rtAt(5000, 2.5, 0.06, 6000, 60);	// shorter than 2.5
+::
+
 METHOD:: hadamard
 The 4 x 4 Hadamard matrix applied to four signals, scaled so energy is kept.
 ARGUMENT:: r
