@@ -37,6 +37,22 @@ ReverbKit {
 		^10 ** (lap * -3 / decay.max(0.01))
 	}
 
+	// what a loop's two filters take from a frequency on one pass, in dB: the
+	// low pass at damp and the high pass at lowCut, both of the second order,
+	// as LPF and HPF are
+	*filterLoss { |freq, damp, lowCut|
+		var f = freq.max(1);
+		^(10 * (1 + ((f / damp.max(1)) ** 4)).log10) + (10 * (1 + ((lowCut.max(1) / f) ** 4)).log10)
+	}
+
+	// how long one frequency takes to fall 60 dB in a loop of `lap` seconds
+	// tuned to `decay`, with those filters once a lap: the displays draw the
+	// highs and the lows with it (it is the model, not a measurement)
+	*rtAt { |freq, decay, lap, damp, lowCut|
+		var perLap = 60 * lap / decay.max(0.01);
+		^60 * lap / (perLap + this.filterLoss(freq, damp, lowCut)).max(1e-6)
+	}
+
 	// the 4 x 4 Hadamard, scaled so energy is kept
 	*hadamard { |r|
 		^[

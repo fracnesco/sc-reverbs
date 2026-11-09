@@ -23,31 +23,58 @@
 Hall : FxParamUnit {
 	*controlName { ^\hall }
 	*hasTail { ^true }
-	*displayClass { ^ReverbView }
-	*windowSize { ^Point(860, 480) }
+	*displayClass { ^HallView }
+	*windowSize { ^Point(900, 560) }
 
 	// what ReverbView draws and drags: the keys of the decay, the pre-delay
 	// and the damping, with the damping's range
 	*viewKeys { ^(decay: \decay, pre: \preDelay, damp: \damp, dampLo: 500, dampHi: 20000) }
 
 	*params {
+		// labels, sections, sizes and units are the window's (sc-fx-ui, 2026-11-09);
+		// the order is the nodeMaps' - append, never reorder
 		^[
-			this.knob(\preDelay, 0, 0.25, \lin, 0.02, "s", "pre", "the gap before the reverb starts", box: \ms, section: \space),
-			this.knob(\room, 0.3, 3, \exp, 1, "", "size", "how big the hall is: the tank's delays, scaled", section: \space),
-			this.knob(\decay, 0.2, 60, \exp, 2.5, "s", "decay", "how long the tail takes to fall 60 dB", section: \space, dec: 2),
+			this.knob(\preDelay, 0, 0.25, \lin, 0.02, "s", "pre", "the gap before the reverb starts - or drag its edge in the display",
+				box: \ms, section: \onset),
+			this.knob(\room, 0.3, 3, \exp, 1, "x", "size", "how big the hall is: the tank's delays, scaled - a bigger one swells later",
+				section: \space, dec: 2),
+			this.knob(\decay, 0.2, 60, \exp, 2.5, "s", "decay", "how long the tail takes to fall 60 dB - or drag the tail's end",
+				section: \space, dec: 2, size: \big)
+				.put(\menuItems, [["room  0.8 s", 0.8], ["chamber  1.5 s", 1.5], ["hall  2.5 s", 2.5], ["church  5 s", 5], ["cathedral  9 s", 9]]),
 			this.knob(\diffusion, 0, 1, \lin, 0.7, "", "diffusion", "how smeared the input is on its way in: low is echoey, high is smooth",
-				box: \pct, section: \space),
-			this.knob(\early, 0, 1, \lin, 0.4, "", "early", "how much of the first reflections, before the tail", box: \pct, section: \space),
+				box: \pct, section: \onset),
+			this.knob(\early, 0, 1, \lin, 0.4, "", "early", "how loud the first reflections are, off the walls, before the tail",
+				box: \pct, section: \onset),
 
 			this.knob(\damp, 500, 20000, \exp, 6000, "Hz", "damp", "the low pass in the loop: the high end dies first", section: \tone, dec: 0),
 			this.knob(\lowCut, 20, 1000, \exp, 60, "Hz", "low cut", "the high pass in the loop: keeps the bottom from piling up", section: \tone, dec: 0),
 			this.knob(\modDepth, 0, 1, \lin, 0.3, "", "mod", "how much the tank's allpasses move: thickens the tail, chorus at the top",
 				box: \pct, section: \tone),
 			this.knob(\modRate, 0.1, 3, \exp, 0.7, "Hz", "rate", "how fast they move", section: \tone),
-			this.knob(\width, 0, 2, \lin, 1, "", "width", "how far apart the two sides are: 0 is mono", box: \pct, section: \tone),
-			this.mixParams(\tone, 0.3)
+			this.knob(\width, 0, 2, \lin, 1, "", "width", "how far apart the two sides are: 0 is mono", box: \pct, section: \output),
+			this.mixParams(\output, 0.3)
 		]
 	}
+
+	// ------------------------------------------------------------- the window
+
+	*guiClass { ^FxDeviceGUI }
+	*panelClass { ^FxDevicePanel }
+	*identityColour { ^FxPalette.identity(\hall) }
+
+	// the onset (the gap, the walls, the swell), the hall itself, its tone
+	*devicePages {
+		^[
+			\main -> [
+				(title: "onset", keys: [\preDelay, \early, \diffusion]),
+				(title: "space", keys: [\room, \decay], colour: \identity),
+				\tone
+			]
+		]
+	}
+
+	// the rate moves nothing while nothing moves
+	*isActive { |key, unit| ^if (key == \modRate) { unit.get(\modDepth) > 0 } { true } }
 
 	*presetList {
 		^[

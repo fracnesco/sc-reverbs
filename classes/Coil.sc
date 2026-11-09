@@ -26,27 +26,49 @@ Coil : FxParamUnit {
 
 	*controlName { ^\coil }
 	*hasTail { ^true }
-	*displayClass { ^ReverbView }
-	*windowSize { ^Point(860, 480) }
+	*displayClass { ^CoilView }
+	*windowSize { ^Point(900, 560) }
 
 	*viewKeys { ^(decay: \decay, pre: nil, damp: \tone, dampLo: 800, dampHi: 8000) }
 
 	*params {
+		// labels, sections and sizes are the window's (sc-fx-ui, 2026-11-09);
+		// the order is the nodeMaps' - append, never reorder
 		^[
-			this.knob(\length, 0.02, 0.12, \exp, 0.045, "s", "length", "how long the spring is: the time round it, before the chirp",
+			this.knob(\length, 0.02, 0.12, \exp, 0.045, "s", "length",
+				"how long the spring is: the time round it, before the chirp comes back - or drag the first round trip",
 				box: \ms, section: \spring),
-			this.knob(\decay, 0.2, 8, \exp, 2, "s", "decay", "how long the tail takes to fall 60 dB", section: \spring, dec: 2),
+			this.knob(\decay, 0.2, 8, \exp, 2, "s", "decay", "how long the tail takes to fall 60 dB - or drag where the springs end",
+				section: \spring, dec: 2, size: \big),
 			this.knob(\tension, 0, 1, \lin, 0.5, "", "tension", "how tight the spring is: tighter chirps higher and faster",
 				box: \pct, section: \spring),
 			this.knob(\drip, 0, 1, \lin, 0.6, "", "drip", "how strongly it disperses: the drip of a click, the boing of a hit",
-				box: \pct, section: \spring),
-			this.menu(\springs, #[\one, \two, \three], \two, "springs", "how many springs, of different lengths, in the tank", \spring),
+				box: \pct, section: \spring, size: \big),
+			this.menu(\springs, #[\one, \two, \three], \two, "springs", "how many springs, of different lengths, in the tank", \tank),
 
-			this.knob(\tone, 800, 8000, \exp, 3500, "Hz", "tone", "the low pass in the loop: a spring carries nothing bright", section: \tone, dec: 0),
+			this.knob(\tone, 800, 8000, \exp, 3500, "Hz", "tone", "the low pass in the loop: a spring carries nothing bright - or drag the ceiling",
+				section: \tone, dec: 0),
 			this.knob(\lowCut, 40, 400, \exp, 120, "Hz", "low cut", "the high pass in the loop", section: \tone, dec: 0),
-			this.knob(\drive, 0, 1, \lin, 0.1, "", "drive", "saturation in the loop: the tank's rattle on a hit", box: \pct, section: \tone),
-			this.knob(\width, 0, 2, \lin, 1, "", "width", "how far apart the two springs' sides are: 0 is mono", box: \pct, section: \tone),
-			this.mixParams(\tone, 0.35)
+			this.knob(\drive, 0, 1, \lin, 0.1, "", "drive", "saturation in the loop: the tank's rattle on a hit", box: \pct, section: \tank),
+			this.knob(\width, 0, 2, \lin, 1, "", "width", "how far apart the two springs' sides are: 0 is mono", box: \pct, section: \output),
+			this.mixParams(\output, 0.35)
+		]
+	}
+
+	// ------------------------------------------------------------- the window
+
+	*guiClass { ^FxDeviceGUI }
+	*panelClass { ^FxDevicePanel }
+	*identityColour { ^FxPalette.identity(\coil) }
+
+	// the tank (how many springs, how hard they are driven), the spring, its tone
+	*devicePages {
+		^[
+			\main -> [
+				\tank,
+				(title: "spring", keys: [\length, \tension, \drip, \decay], colour: \identity),
+				\tone
+			]
 		]
 	}
 

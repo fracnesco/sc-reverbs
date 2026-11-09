@@ -23,26 +23,60 @@
 Shimmer : FxParamUnit {
 	*controlName { ^\shimmer }
 	*hasTail { ^true }
-	*displayClass { ^ReverbView }
-	*windowSize { ^Point(860, 480) }
+	*displayClass { ^ShimmerView }
+	*windowSize { ^Point(900, 560) }
 
 	*viewKeys { ^(decay: \decay, pre: \preDelay, damp: \damp, dampLo: 1000, dampHi: 16000) }
 
 	*params {
+		// labels, sections and sizes are the window's (sc-fx-ui, 2026-11-09);
+		// the order is the nodeMaps' - append, never reorder
 		^[
-			this.knob(\preDelay, 0, 0.2, \lin, 0.01, "s", "pre", "the gap before the tank speaks", box: \ms, section: \shimmer),
-			this.knob(\decay, 0.5, 20, \exp, 4, "s", "decay", "the tank's time to fall 60 dB, before the feedback", section: \shimmer, dec: 2),
-			this.knob(\interval, -24, 24, \lin, 12, "st", "pitch", "the shift, in semitones: 12 an octave up, 7 a fifth, -12 down", lag: 0, section: \shimmer, dec: 0, step: 1),
-			this.knob(\detune, -50, 50, \lin, 0, "ct", "detune", "a few cents off the interval, so the climb beats", section: \shimmer, dec: 0),
-			this.knob(\feedback, 0, 1, \lin, 0.6, "", "feedback", "how much of the shifted tail goes round again", box: \pct, section: \shimmer),
-			this.knob(\rise, 0.05, 1, \exp, 0.25, "s", "rise", "how long each round takes: how fast it climbs", box: \ms, section: \shimmer),
+			this.knob(\preDelay, 0, 0.2, \lin, 0.01, "s", "pre", "the gap before the tank speaks", box: \ms, section: \tank),
+			this.knob(\decay, 0.5, 20, \exp, 4, "s", "decay", "the tank's time to fall 60 dB, before the feedback - or drag the tank's end",
+				section: \tank, dec: 2, size: \big),
+			this.knob(\interval, -24, 24, \lin, 12, "st", "pitch",
+				"the shift, in semitones: 12 an octave up, 7 a fifth, -12 down - or drag the first step up and down",
+				lag: 0, section: \climb, dec: 0, step: 1, size: \big)
+				.put(\menuItems, [["octave up", 12], ["fifth up", 7], ["fourth up", 5], ["octave and a fifth", 19],
+					["two octaves", 24], ["octave down", -12], ["unison (just the detune)", 0]]),
+			this.knob(\detune, -50, 50, \lin, 0, "ct", "detune", "a few cents off the interval, so the climb beats", section: \climb, dec: 0,
+				size: \small),
+			this.knob(\feedback, 0, 1, \lin, 0.6, "", "feedback", "how much of the shifted tail goes round again - or the wheel on the display",
+				box: \pct, section: \climb, size: \big),
+			this.knob(\rise, 0.05, 1, \exp, 0.25, "s", "rise", "how long each round takes: how fast it climbs - or drag the first step along",
+				box: \ms, section: \climb),
 
-			this.knob(\damp, 1000, 16000, \exp, 5000, "Hz", "damp", "the low pass in the loop: where the climb stops", section: \tone, dec: 0),
-			this.knob(\lowCut, 60, 1000, \exp, 150, "Hz", "low cut", "the high pass in the loop: where a fall stops", section: \tone, dec: 0),
+			this.knob(\damp, 1000, 16000, \exp, 5000, "Hz", "damp", "the low pass in the loop: where the climb stops - or drag the ceiling",
+				section: \tone, dec: 0),
+			this.knob(\lowCut, 60, 1000, \exp, 150, "Hz", "low cut", "the high pass in the loop: where a fall stops - or drag the floor",
+				section: \tone, dec: 0),
 			this.knob(\haze, 0, 1, \lin, 0.3, "", "haze", "how spread the shifter's grains are: a wash rather than steps", box: \pct, section: \tone),
-			this.knob(\width, 0, 2, \lin, 1, "", "width", "how far apart the two sides are: 0 is mono", box: \pct, section: \tone),
-			this.mixParams(\tone, 0.35)
+			this.knob(\width, 0, 2, \lin, 1, "", "width", "how far apart the two sides are: 0 is mono", box: \pct, section: \output),
+			this.mixParams(\output, 0.35)
 		]
+	}
+
+	// ------------------------------------------------------------- the window
+
+	*guiClass { ^FxDeviceGUI }
+	*panelClass { ^FxDevicePanel }
+	*identityColour { ^FxPalette.identity(\shimmer) }
+
+	// the tank, the climb (what goes round, how far up, how fast), its tone
+	*devicePages {
+		^[
+			\main -> [
+				\tank,
+				(title: "climb", keys: [\interval, \detune, \feedback, \rise], colour: \identity),
+				\tone
+			]
+		]
+	}
+
+	// without feedback nothing goes round: the shift does nothing
+	*isActive { |key, unit|
+		^if (#[\interval, \detune, \rise, \haze].includes(key)) { unit.get(\feedback) > 0 } { true }
 	}
 
 	*presetList {
