@@ -28,6 +28,9 @@ Shimmer : FxParamUnit {
 
 	*viewKeys { ^(decay: \decay, pre: \preDelay, damp: \damp, dampLo: 1000, dampHi: 16000) }
 
+	// what a Tidal pattern may move through SuperDirtGUI, event by event
+	*tidalParams { ^#[\preDelay, \decay, \interval, \detune, \feedback, \haze, \damp, \lowCut, \width, \mix] }
+
 	*params {
 		// labels, sections and sizes are the window's (sc-fx-ui, 2026-11-09);
 		// the order is the nodeMaps' - append, never reorder

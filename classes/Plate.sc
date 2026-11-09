@@ -26,6 +26,13 @@ Plate : FxParamUnit {
 
 	*viewKeys { ^(decay: \decay, pre: \preDelay, damp: \damp, dampLo: 1000, dampHi: 20000) }
 
+	// parameters renamed on 2026-11-08 so each is a free Tidal word (old -> new):
+	// old presets, sessions and code still reach them
+	*renamed { ^(mod: \modDepth) }
+
+	// what a Tidal pattern may move through SuperDirtGUI, event by event
+	*tidalParams { ^#[\preDelay, \decay, \hold, \damp, \lowCut, \modDepth, \width, \mix] }
+
 	*params {
 		// labels, sections, sizes and units are the window's (sc-fx-ui, 2026-11-09);
 		// the order is the nodeMaps' - append, never reorder

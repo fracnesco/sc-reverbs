@@ -31,6 +31,9 @@ Coil : FxParamUnit {
 
 	*viewKeys { ^(decay: \decay, pre: nil, damp: \tone, dampLo: 800, dampHi: 8000) }
 
+	// what a Tidal pattern may move through SuperDirtGUI, event by event
+	*tidalParams { ^#[\decay, \tension, \drip, \tone, \lowCut, \drive, \width, \mix] }
+
 	*params {
 		// labels, sections and sizes are the window's (sc-fx-ui, 2026-11-09);
 		// the order is the nodeMaps' - append, never reorder
