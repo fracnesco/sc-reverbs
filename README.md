@@ -57,6 +57,8 @@ Select `Hall` and press cmd/ctrl + d for the help file, and see [examples/reverb
 
 ## Hall
 
+![Hall's window](images/hall.png)
+
 The input goes through a pre-delay, then four allpasses that smear it, into a tank of two branches in a figure of eight: each branch is an allpass whose time moves a little (`modDepth`, `modRate`), a delay, the damping, another allpass and a second delay, feeding the other branch. `room` scales every delay in it. `decay` is the time the tail takes to fall 60 dB whatever the room: the loop gain is worked out from the lap. `damp` is a low pass in the loop, so the high end dies first, as in a real room, and `lowCut` a high pass so the bottom does not pile up. Five early reflections a side, before the tail, at `early`.
 
 The tank's first output arrives about 170 ms after the input at a room of 1, so with `early` at 0 a short sound has a gap before its tail; the reflections fill it.
@@ -80,6 +82,8 @@ Built in presets: default, small hall, concert hall, cathedral, dark hall, brigh
 
 ## Plate
 
+![Plate's window](images/plate.png)
+
 A feedback delay network of four lines of 42 to 73 ms (scaled by `room`), Hadamard mixed, so the echoes are dense from the first moment, as on a steel plate; two allpasses a side smear the input on its way in (`diffusion`). `decay` is the time to 60 dB; `damp` and `lowCut` are the filters in the loop; `modDepth` moves the lines a little, which takes the metal out of a long tail.
 
 `hold` freezes what is in it: the lines go round at unity, the filters step aside and nothing more comes in. A held plate never goes quiet, so in a SuperDirt insert an orbit with `hold` on does not sleep.
@@ -102,6 +106,8 @@ Built in presets: default, vocal plate, snare plate, bright plate, dark plate, s
 
 ## Coil
 
+![Coil's window](images/coil.png)
+
 A spring is dispersive: the frequencies travel along it at different speeds, so a click comes out as a chirp, and the echoes of that chirp, round and round, are the boing. Here that is a chain of twelve allpasses at one short time, in a loop as long as the spring (`length`), through a low pass (`tone`: a spring carries nothing bright), a high pass and a little saturation (`drive`). `tension` sets how short each stage is - a tight spring chirps higher and faster - and `drip` how strongly it disperses. `springs` adds a second and a third spring of other lengths, each a loop of its own, so a hit smears across them.
 
 `decay` is the time to 60 dB for the middle of the band; the low end, which the chain holds back longest, rings a little longer than that, as it does on a spring.
@@ -123,6 +129,8 @@ Built in presets: default, surf tank, guitar amp, short spring, long spring, dub
 | `output` | output | -36 .. 24 dB | 0 | the level of the whole thing, in dB |
 
 ## Shimmer
+
+![Shimmer's window](images/shimmer.png)
 
 A dense tank, and what comes out of it goes round again shifted by `interval` semitones (12 an octave up, 7 a fifth, -12 down), so a chord becomes a rising, glassy cloud: Eno and Lanois's trick. `feedback` is how much of the shifted tail goes round, `rise` how long each round takes, so how fast it climbs. `decay` is the tank's own time to 60 dB. The shift is a granular pitch shifter; `haze` spreads its grains so the climb is a wash rather than a staircase, and `detune` puts it a few cents off so it beats.
 
@@ -190,6 +198,7 @@ In a SuperDirt insert, an orbit sleeps when its effects fall silent; a reverb ke
 | [examples/reverbs-demo.scd](examples/reverbs-demo.scd) | a walkthrough, one block at a time |
 | [install.scd](install.scd) | the symlink, a check, an uninstall |
 | [sc-reverbs.quark](sc-reverbs.quark) | the quark manifest |
+| [images/](images/) | the screenshots in this README |
 
 ## Issues
 
