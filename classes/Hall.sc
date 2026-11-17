@@ -77,6 +77,9 @@ Hall : FxParamUnit {
 	}
 
 	// the rate moves nothing while nothing moves
+	// a card in a strip (FxDeviceCard)
+	*cardKeys { ^#[\decay, \room, \damp, \mix] }
+
 	*isActive { |key, unit| ^if (key == \modRate) { unit.get(\modDepth) > 0 } { true } }
 
 	*presetList {
